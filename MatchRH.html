@@ -665,7 +665,7 @@
 
   .login-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     gap: 0.75rem;
     margin-top: 0.75rem;
   }
@@ -713,6 +713,44 @@
     color: #2e7d32;
     font-size: 0.85rem;
     min-height: 1.2rem;
+  }
+
+  .modal-panel select {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: #fff;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231a1a2e' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  .modal-panel select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.16);
+  }
+
+  .forgot-password-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--gold);
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .forgot-password-link:hover {
+    opacity: 0.8;
   }
 </style>
 </head>
@@ -834,12 +872,15 @@
           <p id="auth-description">Use seu login de colaborador para acessar informações personalizadas.</p>
         </div>
       </div>
-
+    
       <form id="login-form" onsubmit="event.preventDefault(); handleLoginSubmit();">
         <label for="login-username">Usuário</label>
         <input id="login-username" type="text" placeholder="Digite seu usuário" required>
         <label for="login-password">Senha</label>
         <input id="login-password" type="password" placeholder="Digite sua senha" required>
+        <div style="text-align: right; margin-top: 0.5rem; margin-bottom: 1rem;">
+          <a class="forgot-password-link" onclick="openForgotPassword()" style="align-items: center; display: flex; justify-content: center;">Esqueci a senha</a>
+        </div>
         <div class="login-actions">
           <button type="button" class="secondary-btn" onclick="openRegister()">Cadastrar</button>
           <button type="submit" class="primary-btn">Entrar</button>
@@ -854,7 +895,12 @@
         <label for="register-name">Nome completo</label>
         <input id="register-name" type="text" placeholder="Digite seu nome" required>
         <label for="register-dept">Departamento</label>
-        <input id="register-dept" type="text" placeholder="Digite seu departamento" required>
+        <select id="register-dept" required>
+          <option value="">Selecione seu departamento</option>
+          <option value="Coordenador de RH">Coordenador de RH</option>
+          <option value="Diretor de RH">Diretor de RH</option>
+          <option value="Gerente de RH">Gerente de RH</option>
+        </select>
         <label for="register-password">Senha</label>
         <input id="register-password" type="password" placeholder="Escolha uma senha" required>
         <div class="login-actions">
@@ -862,6 +908,31 @@
           <button type="submit" class="primary-btn">Cadastrar</button>
         </div>
         <p class="login-error" id="register-error"></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="forgot-password-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeForgotPassword()"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="forgot-title">
+      <button class="modal-close" onclick="closeForgotPassword()" aria-label="Fechar modal">×</button>
+      <div class="modal-head">
+        <div class="modal-icon">🔑</div>
+        <div>
+          <h3 id="forgot-title">Recuperar Senha</h3>
+          <p id="forgot-description">Digite seu usuário para receber instruções de recuperação.</p>
+        </div>
+      </div>
+    
+      <form id="forgot-password-form" onsubmit="event.preventDefault(); handleForgotPassword();">
+        <label for="forgot-username">Usuário</label>
+        <input id="forgot-username" type="text" placeholder="Digite seu usuário" required>
+        <div class="login-actions">
+          <button type="button" class="secondary-btn" onclick="closeForgotPassword()">Cancelar</button>
+          <button type="submit" class="primary-btn">Enviar</button>
+        </div>
+        <p class="login-error" id="forgot-error"></p>
+        <p class="login-success hidden" id="forgot-success"></p>
       </form>
     </div>
   </div>
