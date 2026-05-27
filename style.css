@@ -1,0 +1,87 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#ffffff;
+color:white;
+overflow-x:hidden;
+}
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 2%;
+position:fixed;
+width:100%;
+top:0;
+backdrop-filter:blur(10px);
+background:rgba(255, 255, 255, 0.466);
+border-bottom:1px solid rgba(126, 126, 126, 0.2);
+border-width: 2px;
+z-index:10;
+}
+
+.logo{
+background-size:40px;
+}
+
+@keyframes gradient{
+0%{background-position:0%}
+100%{background-position:200%}
+}
+
+nav ul{
+display:flex;
+list-style:none;
+gap:35px;
+}
+
+.selected{
+text-decoration:none;
+font-weight:500;
+font-size:16px;
+position:relative;
+color: transparent;
+background:linear-gradient(90deg,rgb(211, 211, 211),rgb(255, 255, 255),rgb(204, 204, 204),rgb(212, 212, 212));
+display:inline-block;
+animation:navGradient 2s linear infinite;
+-webkit-background-clip:text;
+background-size:200%;
+transition:0.3s;
+cursor: default;
+}
+
+.selected{
+text-decoration:none;
+font-weight:500;
+font-size:16px;
+position:relative;
+color: transparent;
+background:linear-gradient(90deg,rgb(165, 165, 165),rgb(158, 158, 158),rgb(163, 163, 163),rgb(212, 212, 212));
+display:inline-block;
+animation:navGradient 2s linear infinite;
+-webkit-background-clip:text;
+background-size:200%;
+transition:0.3s;
+cursor: default;
+}
+
+.nav-link{
+text-decoration:none;
+font-weight:500;
+font-size:16px;
+position:relative;
+color:#ffffff;
+display:inline-block;
+transition:0.3s;
+}
+
+@keyframes navGradient{
+0%{background-position:0%}
+100%{background-position:200%}
+}
