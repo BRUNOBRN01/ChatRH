@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatRH</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="script"
+<link rel="icon" href="imagens/logo menor ChatRH.png" type="image/png">
+<style>
+      :root {
+    --ink: #1a1a2e;
+    --paper: #f5f0e8;
+    --cream: #ede8dc;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --sage: #6b8f71;
+    --rust: #b85c38;
+    --mid: #5a5a7a;
+    --line: rgba(26,26,46,0.12);
+    --shadow: 0 4px 24px rgba(26,26,46,0.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    border-bottom: 2px solid var(--gold);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--gold);
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    color: var(--paper);
+  }
+
+  .logo-text span { color: var(--gold); }
+
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--cream);
+    opacity: 0.8;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    background: var(--sage);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* ── Layout ── */
+  .layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── Sidebar ── */
+  aside {
+    width: 260px;
+    background: var(--cream);
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: 1.5rem 0;
+  }
+
+  .sidebar-section {
+    padding: 0 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-title {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 0.75rem;
+    padding-left: 0.25rem;
+  }
+
+  .quick-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, color 0.15s;
+    margin-bottom: 2px;
+  }
+
+  .quick-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .quick-btn:hover .btn-icon { color: var(--gold); }
+
+  .btn-icon {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+    color: var(--mid);
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--line);
+    margin: 0.5rem 1.25rem 1.5rem;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 1rem 1.25rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .user-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .user-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    width: auto;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .logout-btn {
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    border-radius: 12px;
+    padding: 0.75rem 0.9rem;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .logout-btn:hover {
+    background: var(--cream);
+  }
+
+  .logout-btn.hidden {
+    display: none;
+  }
+
+  .user-card:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  .avatar {
+    width: 34px; height: 34px;
+    background: var(--ink);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .user-info { flex: 1; }
+  .user-name { font-size: 0.82rem; font-weight: 500; color: var(--ink); }
+  .user-dept { font-size: 0.72rem; color: var(--mid); }
+
+  /* ── Chat Area ── */
+  .chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .chat-header {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .chat-header-left h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .chat-header-left p {
+    font-size: 0.75rem;
+    color: var(--mid);
+    margin-top: 1px;
+  }
+
+  .clear-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mid);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .clear-btn:hover { color: var(--rust); border-color: var(--rust); }
+
+  /* ── Messages ── */
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    scroll-behavior: smooth;
+  }
+
+  #messages::-webkit-scrollbar { width: 5px; }
+  #messages::-webkit-scrollbar-track { background: transparent; }
+  #messages::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
+
+  /* Welcome message */
+  .welcome {
+    text-align: center;
+    padding: 2rem 1rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .welcome-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .welcome h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .welcome p {
+    font-size: 0.88rem;
+    color: var(--mid);
+    max-width: 380px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .welcome-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+
+  .chip {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    background: white;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .chip:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  /* Message bubbles */
+  .message {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    animation: fadeUp 0.3s ease both;
+    max-width: 720px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message.user { flex-direction: row-reverse; align-self: flex-end; }
+
+  .msg-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .message.bot .msg-avatar {
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+  }
+
+  .message.user .msg-avatar {
+    background: var(--gold);
+    color: var(--ink);
+    font-family: 'Playfair Display', serif;
+  }
+
+  .msg-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .bubble {
+    padding: 0.85rem 1.1rem;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    max-width: 560px;
+    position: relative;
+  }
+
+  .message.bot .bubble {
+    background: white;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-top-left-radius: 4px;
+    box-shadow: var(--shadow);
+  }
+
+  .message.user .bubble {
+    background: var(--ink);
+    color: var(--paper);
+    border-top-right-radius: 4px;
+  }
+
+  .bubble-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+    opacity: 0.55;
+  }
+
+  /* Typing indicator */
+  .typing .bubble {
+    padding: 0.85rem 1.1rem;
+  }
+
+  .typing-dots {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    height: 20px;
+  }
+
+  .typing-dots span {
+    width: 6px; height: 6px;
+    background: var(--mid);
+    border-radius: 50%;
+    animation: bounce 1.2s ease-in-out infinite;
+  }
+
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-6px); }
+  }
+
+  /* ── Input Area ── */
+  .input-area {
+    padding: 1rem 2rem 1.5rem;
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+  }
+
+  .input-wrap {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    display: flex;
+    align-items: flex-end;
+    padding: 0.6rem 0.75rem;
+    gap: 0.5rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow);
+  }
+
+  .input-wrap:focus-within {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.12), var(--shadow);
+  }
+
+  #user-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    color: var(--ink);
+    resize: none;
+    max-height: 120px;
+    line-height: 1.5;
+    padding: 0.2rem 0;
+  }
+
+  #user-input::placeholder { color: #a0a0b8; }
+
+  .send-btn {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--ink);
+    color: var(--gold);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .send-btn:hover { background: var(--gold); color: var(--ink); }
+  .send-btn:active { transform: scale(0.94); }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .input-hint {
+    font-size: 0.7rem;
+    color: var(--mid);
+    opacity: 0.6;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    aside { display: none; }
+    #messages { padding: 1rem; }
+    .input-area { padding: 0.75rem 1rem 1rem; }
+    .chat-header { padding: 0.75rem 1rem; }
+  }
+
+  .hidden { display: none; }
+
+  /* ── Login modal ── */
+  .modal.hidden { display: none; }
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 15, 35, 0.68);
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-panel {
+    position: relative;
+    z-index: 1;
+    width: min(420px, 100%);
+    background: white;
+    border-radius: 24px;
+    padding: 1.75rem;
+    box-shadow: 0 28px 70px rgba(15, 15, 35, 0.18);
+    border: 1px solid rgba(26, 26, 46, 0.08);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border: none;
+    background: transparent;
+    color: var(--ink);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .modal-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .modal-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 1.25rem;
+  }
+
+  .modal-head h3 {
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--ink);
+  }
+
+  .modal-head p {
+    margin: 0.4rem 0 0;
+    color: var(--mid);
+    font-size: 0.9rem;
+  }
+
+  .modal-panel label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mid);
+  }
+
+  .modal-panel input {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: #fff;
+  }
+
+  .modal-panel input:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.16);
+  }
+
+  .login-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem 1.2rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .secondary-btn {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+
+  .secondary-btn:hover {
+    background: var(--cream);
+  }
+
+  .primary-btn {
+    background: var(--ink);
+    color: var(--gold);
+  }
+
+  .primary-btn:hover {
+    transform: translateY(-1px);
+    background: var(--gold);
+    color: var(--ink);
+  }
+
+  .login-error {
+    margin-top: 0.9rem;
+    color: #b85c38;
+    font-size: 0.85rem;
+    min-height: 1.2rem;
+  }
+
+  .login-success {
+    margin-top: 0.9rem;
+    color: #2e7d32;
+    font-size: 0.85rem;
+    min-height: 1.2rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo"><img src="imagens/logo ChatRH.png" width="150px" alt="Logo"></div>
+  </div>
+  <div class="status-pill">
+    <div class="status-dot"></div>
+    Assistente Online
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Tópicos Rápidos</div>
+      <button class="quick-btn" onclick="sendQuick('Quais são meus benefícios?')">
+        <span class="btn-icon">🎁</span> Benefícios
+      </button>
+      <button class="quick-btn" onclick="sendQuick('Como solicitar férias?')">
+        <span class="btn-icon">✈️</span> Férias e Folgas
+      </button>
+      <button class="quick-btn" onclick="sendQuick('Como funciona o processo de avaliação de desempenho?')">
+        <span class="btn-icon">📊</span> Avaliação de Desempenho
+      </button>
+      <button class="quick-btn" onclick="sendQuick('Quais são as políticas de trabalho remoto?')">
+        <span class="btn-icon">🏠</span> Trabalho Remoto
+      </button>
+      <button class="quick-btn" onclick="sendQuick('Como funciona o plano de saúde?')">
+        <span class="btn-icon">🏥</span> Plano de Saúde
+      </button>
+      <button class="quick-btn" onclick="sendQuick('Como reportar um problema no trabalho?')">
+        <span class="btn-icon">🔔</span> Suporte & Denúncias
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Recursos</div>
+      <button class="quick-btn" onclick="sendQuick('Quais são as oportunidades de treinamento disponíveis?')">
+        <span class="btn-icon">📚</span> Treinamentos
+      </button>
+      <button class="quick-btn" onclick="sendQuick('Como funciona o processo de recrutamento interno?')">
+        <span class="btn-icon">🌱</span> Crescimento Interno
+      </button>
+      <button class="quick-btn" onclick="sendQuick('Qual é a política de reembolso de despesas?')">
+        <span class="btn-icon">💳</span> Reembolsos
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-footer">
+        <button class="user-card" id="user-card" type="button" onclick="handleUserCardClick()">
+          <div class="avatar" id="user-avatar">U</div>
+          <div class="user-info">
+            <div class="user-name" id="user-name">user</div>
+            <div class="user-dept" id="user-dept">Clique para entrar</div>
+          </div>
+        </button>
+        <button class="logout-btn hidden" id="logout-btn" type="button" onclick="logout()" aria-label="Deslogar">
+          Sair
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Chat -->
+  <div class="chat-area">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <h2>Assistente de RH</h2>
+        <p>Pergunte sobre políticas, benefícios, processos e mais</p>
+      </div>
+      <button class="clear-btn" onclick="clearChat()">Limpar conversa</button>
+    </div>
+
+    <div id="messages">
+      <div class="welcome" id="welcome">
+        <div class="welcome-icon">✦</div>
+        <h3>Olá! Sou seu Assistente de RH</h3>
+        <p>Estou aqui para responder suas dúvidas sobre políticas, benefícios, processos e qualquer assunto relacionado ao departamento de Recursos Humanos.</p>
+        <div class="welcome-chips">
+          <button class="chip" onclick="sendQuick('Quais são meus benefícios?')">Meus benefícios</button>
+          <button class="chip" onclick="sendQuick('Como solicitar férias?')">Solicitar férias</button>
+          <button class="chip" onclick="sendQuick('Política de home office')">Home office</button>
+          <button class="chip" onclick="sendQuick('Plano de carreira')">Plano de carreira</button>
+          <button class="chip" onclick="sendQuick('Contato do RH')">Contato do RH</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-row">
+        <div class="input-wrap">
+          <textarea id="user-input" rows="1" placeholder="Digite sua pergunta sobre RH..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        </div>
+        <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Enviar">
+          ➤
+        </button>
+      </div>
+      <div class="input-hint">Pressione Enter para enviar · Shift+Enter para nova linha</div>
+    </div>
+  </div>
+
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeLogin()"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+      <button class="modal-close" onclick="closeLogin()" aria-label="Fechar modal">×</button>
+      <div class="modal-head">
+        <div class="modal-icon">🔐</div>
+        <div>
+          <h3 id="auth-title">Entrar na conta</h3>
+          <p id="auth-description">Use seu login de colaborador para acessar informações personalizadas.</p>
+        </div>
+      </div>
+
+      <form id="login-form" onsubmit="event.preventDefault(); handleLoginSubmit();">
+        <label for="login-username">Usuário</label>
+        <input id="login-username" type="text" placeholder="Digite seu usuário" required>
+        <label for="login-password">Senha</label>
+        <input id="login-password" type="password" placeholder="Digite sua senha" required>
+        <div class="login-actions">
+          <button type="button" class="secondary-btn" onclick="openRegister()">Cadastrar</button>
+          <button type="submit" class="primary-btn">Entrar</button>
+        </div>
+        <p class="login-error" id="login-error"></p>
+        <p class="login-success hidden" id="login-success"></p>
+      </form>
+
+      <form id="register-form" class="hidden" onsubmit="event.preventDefault(); handleRegisterSubmit();">
+        <label for="register-username">Usuário</label>
+        <input id="register-username" type="text" placeholder="Escolha um usuário" required>
+        <label for="register-name">Nome completo</label>
+        <input id="register-name" type="text" placeholder="Digite seu nome" required>
+        <label for="register-dept">Departamento</label>
+        <input id="register-dept" type="text" placeholder="Digite seu departamento" required>
+        <label for="register-password">Senha</label>
+        <input id="register-password" type="password" placeholder="Escolha uma senha" required>
+        <div class="login-actions">
+          <button type="button" class="secondary-btn" onclick="showLoginView()">Voltar ao login</button>
+          <button type="submit" class="primary-btn">Cadastrar</button>
+        </div>
+        <p class="login-error" id="register-error"></p>
+      </form>
+    </div>
+  </div>
+
+</div>
+<script src="script MatchRH.js"></script>
+</body>
+</html>
