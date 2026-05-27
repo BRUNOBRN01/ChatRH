@@ -19,11 +19,11 @@ Não invente informações. Se não tiver certeza, diga que o colaborador deve c
   const usersStorageKey = 'chatRH-users';
   const userStorageKey = 'chatRH-user';
   const defaultUsers = [
-    { username: 'Bryan', password: '1234', name: 'Bryan Chagas', dept: 'Recursos Humanos', initials: 'BC' },
-    { username: 'Arthur', password: '1234', name: 'Arthur Souza', dept: 'Recursos Humanos', initials: 'AS' },
-    { username: 'Davi', password: '1234', name: 'Davi Pereira', dept: 'Recursos Humanos', initials: 'DP' },
-    { username: 'Eduardo', password: '1234', name: 'Eduardo Marin', dept: 'Recursos Humanos', initials: 'EM' },
-    { username: 'Bruno', password: '1234', name: 'Bruno Ribeiro', dept: 'Recursos Humanos', initials: 'BR' }
+    { username: 'Bryan', password: '1234', name: 'Bryan Chagas', dept: 'Gerente de RH', initials: 'BC' },
+    { username: 'Arthur', password: '1234', name: 'Arthur Souza', dept: 'Diretor de RH', initials: 'AS' },
+    { username: 'Davi', password: '1234', name: 'Davi Pereira', dept: 'Coordenador de RH', initials: 'DP' },
+    { username: 'Eduardo', password: '1234', name: 'Eduardo Marin', dept: 'Diretor de RH', initials: 'EM' },
+    { username: 'Bruno', password: '1234', name: 'Bruno Ribeiro', dept: 'Coordenador de RH', initials: 'BR' }
   ];
 
   let usersDB = [...defaultUsers];
@@ -483,4 +483,41 @@ Se não souber o canal exato, peça ao seu gestor ou consulte a área de comunic
     isTyping = false;
     document.getElementById('send-btn').disabled = false;
     input.focus();
+  }
+
+  function openForgotPassword() {
+    document.getElementById('forgot-username').value = '';
+    document.getElementById('forgot-error').textContent = '';
+    const successElement = document.getElementById('forgot-success');
+    successElement.textContent = '';
+    successElement.classList.add('hidden');
+    document.getElementById('forgot-password-modal').classList.remove('hidden');
+    document.getElementById('forgot-username').focus();
+  }
+
+  function closeForgotPassword() {
+    document.getElementById('forgot-password-modal').classList.add('hidden');
+  }
+
+  function handleForgotPassword() {
+    const username = document.getElementById('forgot-username').value.trim();
+    const errorElement = document.getElementById('forgot-error');
+    const successElement = document.getElementById('forgot-success');
+
+    const user = usersDB.find(u => u.username === username);
+    if (!user) {
+      errorElement.textContent = 'Usuário não encontrado. Verifique e tente novamente.';
+      successElement.classList.add('hidden');
+      return;
+    }
+
+    errorElement.textContent = '';
+    successElement.textContent = `Instruções de recuperação foram enviadas para o email associado à conta "${username}". Verifique sua caixa de entrada e siga os passos indicados.`;
+    successElement.classList.remove('hidden');
+    
+    setTimeout(() => {
+      closeForgotPassword();
+      showLoginView();
+      document.getElementById('login-modal').classList.remove('hidden');
+    }, 3000);
   }
